@@ -14,6 +14,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Gradle: aws-java-sdk-1.0.002" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging-1.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-codec-1.3" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-httpclient-3.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jackson-core-asl-1.4.5" level="project" />
   </component>
 </module>
 
