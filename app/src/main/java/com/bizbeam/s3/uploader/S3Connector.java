@@ -4,6 +4,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import org.apache.log4j.Logger;
 
 public class S3Connector {
 
@@ -24,7 +25,9 @@ public class S3Connector {
             amazonS3 = new AmazonS3Client(awsCredentials);
             //amazonS3.createBucket(s3Bucket);
 
-            //Logger.info("Using S3 Bucket: " + s3Bucket);
+            LOGGER.info("Using S3 Bucket: " + mAWS_S3_BUCKET);
         }
     }
+
+    private static final Logger LOGGER = Logger.getLogger(S3Connector.class);
 }
