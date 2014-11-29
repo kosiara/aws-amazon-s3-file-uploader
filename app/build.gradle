@@ -5,6 +5,9 @@ repositories {
 }
 
 jar {
+    //create fat-jar file
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
     manifest {
         attributes 'Main-Class': 'com.bizbeam.s3.uploader.Main'
     }
