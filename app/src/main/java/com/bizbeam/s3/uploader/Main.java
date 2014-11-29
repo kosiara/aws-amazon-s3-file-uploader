@@ -1,5 +1,7 @@
 package com.bizbeam.s3.uploader;
 
+import com.beust.jcommander.JCommander;
+import com.bizbeam.s3.uploader.jcommander.JCommanderParams;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -16,14 +18,15 @@ public class Main {
         int intervalSeconds = 0;
         long correctConnections = 0;
         long failedConnections = 0;
+        JCommanderParams jcp = new JCommanderParams();
 
         try {
             LOGGER.info("Initializing connector...");
 
-            if (args.length < 1)
-                throw new Exception("You need to pass interval [s] as parameter!");
+            new JCommander(jcp, args);
+            processArguments(jcp);
 
-            intervalSeconds = Integer.parseInt(args[0]);
+            intervalSeconds = jcp.getIntervalSeconds();
             LOGGER.info("interval : " + intervalSeconds + " [sec]");
 
             S3Connector s3Connector = new S3Connector(AWSBucketName, AWSAccessKeyId, AWSSecretKey);
@@ -66,6 +69,13 @@ public class Main {
         } catch (Exception exc) {
             LOGGER.error(exc);
         }
+    }
+
+    private static void processArguments(JCommanderParams jcp) {
+        int paramNum = jcp.getParameters().size();
+
+        if (jcp.getIntervalSeconds() ==  -1)
+            jcp.setIntervalSeconds(5);
     }
 
     private static void sleep(int millis) {
