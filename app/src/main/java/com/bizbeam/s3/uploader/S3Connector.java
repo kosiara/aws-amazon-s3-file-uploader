@@ -12,10 +12,11 @@ import java.io.File;
 
 public class S3Connector {
 
-    public String mAWS_S3_BUCKET;
-    public String mAWS_ACCESS_KEY;
-    public String mAWS_SECRET_KEY;
-    public AmazonS3 mAmazonS3;
+    private String mAWS_S3_BUCKET;
+    private String mAWS_ACCESS_KEY;
+    private String mAWS_SECRET_KEY;
+    private AmazonS3 mAmazonS3;
+    private boolean mInitialized = false;
 
     public S3Connector(String s3Bucket, String s3AccessKey, String s3SecretKey) {
         mAWS_S3_BUCKET = s3Bucket;
@@ -27,19 +28,36 @@ public class S3Connector {
         if ((mAWS_ACCESS_KEY != null) && (mAWS_SECRET_KEY != null)) {
             AWSCredentials awsCredentials = new BasicAWSCredentials(mAWS_ACCESS_KEY, mAWS_SECRET_KEY);
             mAmazonS3 = new AmazonS3Client(awsCredentials);
-            //mAmazonS3.createBucket(s3Bucket);
 
             LOGGER.info("Using S3 Bucket: " + mAWS_S3_BUCKET);
+            mInitialized = true;
         }
     }
 
-    public void uploadFile(File file) {
+    public void uploadFile(File file) throws Exception{
+        if (!mInitialized)
+            throw new Exception(CONNECTOR_NOT_INITIAZLIED_ERROR_MSG);
 
         PutObjectRequest putObjectRequest = new PutObjectRequest(mAWS_S3_BUCKET, file.getName(), file);
-        putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead); // public for all
-        mAmazonS3.putObject(putObjectRequest); // upload file
-        
+        putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
+        mAmazonS3.putObject(putObjectRequest);
     }
 
+    public void createNewBucket(String bucketName) throws Exception {
+        if (!mInitialized)
+            throw new Exception(CONNECTOR_NOT_INITIAZLIED_ERROR_MSG);
+
+        mAmazonS3.createBucket(bucketName);
+    }
+
+    public void removeFile(String objectKey) throws Exception {
+        if (!mInitialized)
+            throw new Exception(CONNECTOR_NOT_INITIAZLIED_ERROR_MSG);
+
+        mAmazonS3.deleteObject(mAWS_S3_BUCKET, objectKey);
+    }
+
+
+    private static String CONNECTOR_NOT_INITIAZLIED_ERROR_MSG = "Connector not initialized";
     private static final Logger LOGGER = Logger.getLogger(S3Connector.class);
 }

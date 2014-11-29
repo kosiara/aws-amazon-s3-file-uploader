@@ -22,6 +22,9 @@ public class Main {
             s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "AdobeXMLFormsSamples.pdf"));
             s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "nature-wallpaper-27.jpg"));
 
+            s3Connector.removeFile("AdobeXMLFormsSamples.pdf");
+            s3Connector.removeFile("nature-wallpaper-27.jpg");
+
         } catch (Exception exc) {
             LOGGER.error(exc);
         }
