@@ -4,6 +4,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.apache.log4j.Logger;
@@ -24,17 +25,24 @@ public class S3Connector {
         mAWS_SECRET_KEY = s3SecretKey;
     }
 
-    public void initialize() {
+    public void initialize()  throws Exception {
         if ((mAWS_ACCESS_KEY != null) && (mAWS_SECRET_KEY != null)) {
             AWSCredentials awsCredentials = new BasicAWSCredentials(mAWS_ACCESS_KEY, mAWS_SECRET_KEY);
             mAmazonS3 = new AmazonS3Client(awsCredentials);
+
+            try {
+                mAmazonS3.listBuckets();
+            } catch (AmazonS3Exception exc) {
+                if (exc.getErrorCode().equals("SignatureDoesNotMatch"))
+                    throw new Exception("WRONG AWS KEY OR PASSWORD!");
+            }
 
             LOGGER.info("Using S3 Bucket: " + mAWS_S3_BUCKET);
             mInitialized = true;
         }
     }
 
-    public void uploadFile(File file) throws Exception{
+    public void uploadFile(File file) throws Exception {
         if (!mInitialized)
             throw new Exception(CONNECTOR_NOT_INITIAZLIED_ERROR_MSG);
 
