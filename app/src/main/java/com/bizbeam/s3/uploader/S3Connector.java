@@ -33,7 +33,7 @@ public class S3Connector {
             try {
                 mAmazonS3.listBuckets();
             } catch (AmazonS3Exception exc) {
-                if (exc.getErrorCode().equals("SignatureDoesNotMatch"))
+                if (exc.getErrorCode().equals("SignatureDoesNotMatch") || exc.getErrorCode().equals("InvalidAccessKeyId"))
                     throw new Exception("WRONG AWS KEY OR PASSWORD!");
             }
 
