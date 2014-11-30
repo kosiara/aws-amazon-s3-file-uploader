@@ -41,7 +41,7 @@ public class Main {
                     String[] allFiles = new File(".").list();
                     List<File> filesToUpload = Lists.newArrayList();
                     for (String file : allFiles) {
-                        if (file.contains("app") || file.contains("jar"))
+                        if (file.contains("app") || file.contains(".jar") || file.contains(".sh"))
                             continue;
                         File f = new File(file);
                         if (f.isDirectory())
