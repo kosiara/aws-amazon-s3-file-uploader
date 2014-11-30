@@ -5,8 +5,11 @@ uploads files to aws amazon s3 cloud storage.
 
 How to run:
 
+java -jar app.jar
+
 java -jar app.jar -i 5
 
+java -jar app.jar -i 5 -k youAmAzONAWSKey -s 2mmsdSE34fCYourAwsAmazonSecret -b yourBucketName
 
 Parameters
 ==========
