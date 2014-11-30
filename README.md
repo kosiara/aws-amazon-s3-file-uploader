@@ -11,7 +11,7 @@ java -jar app.jar -i 5
 Parameters
 ==========
 
--i/-int/-interval  -  interval in seconds between calls
--k/-key/-accessKey  -  AWSAccessKeyId to access Amazon S3 cloud storage that you can obtain from https://console.aws.amazon.com/iam/home
--s/-secret/-secretKey - AWSSecretKey used as a password
--b/-bucket/-bucketName - bucket name
+* -i/-int/-interval  -  interval in seconds between calls
+* -k/-key/-accessKey  -  AWSAccessKeyId to access Amazon S3 cloud storage that you can obtain from https://console.aws.amazon.com/iam/home
+* -s/-secret/-secretKey - AWSSecretKey used as a password
+* -b/-bucket/-bucketName - bucket name
