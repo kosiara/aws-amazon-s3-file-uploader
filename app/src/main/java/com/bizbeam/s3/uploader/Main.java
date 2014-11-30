@@ -1,17 +1,17 @@
 package com.bizbeam.s3.uploader;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.internal.Lists;
 import com.bizbeam.s3.uploader.jcommander.JCommanderParams;
 import org.apache.log4j.Logger;
-
 import java.io.File;
+import java.util.List;
 
 public class Main {
 
     private static String AWSAccessKeyId= "SAMPLESAMPLESAMPLE";
     private static String AWSSecretKey="2SamPleSample3456SaMpleSample3578SampleSaMpLe";
     private static String AWSBucketName = "sampleBucketName";
-    private static String FILE_PREFIX_PATH = "app/src/main/resources";
 
 	public static void main (String args[]) {
 
@@ -29,6 +29,7 @@ public class Main {
             LOGGER.info("access key : " + jcp.getAccessKey());
             LOGGER.info("secret key : " + jcp.getSecretKey());
             LOGGER.info("bucket name : " + jcp.getBucketName());
+            LOGGER.info("current dir : " + new File(".").getAbsolutePath());
 
             S3Connector s3Connector = new S3Connector(jcp.getBucketName(), jcp.getAccessKey(), jcp.getSecretKey());
             s3Connector.initialize();
@@ -36,22 +37,26 @@ public class Main {
             while (true) {
 
                 try {
-                    //put two files
-                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "sampleFiles/AdobeXMLFormsSamples.pdf"));
-                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "nature-wallpaper-27.jpg"));
 
-                    s3Connector.removeFile("sampleFiles/AdobeXMLFormsSamples.pdf");
-                    s3Connector.removeFile("nature-wallpaper-27.jpg");
+                    String[] allFiles = new File(".").list();
+                    List<File> filesToUpload = Lists.newArrayList();
+                    for (String file : allFiles) {
+                        if (file.contains("app") || file.contains("jar"))
+                            continue;
+                        File f = new File(file);
+                        if (f.isDirectory())
+                            continue;
 
-                    //small files
-                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "cake.jpg"));
-                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "turtle.jpg"));
+                        filesToUpload.add(f);
+                    }
 
-                    s3Connector.removeFile("cake.jpg");
-                    s3Connector.removeFile("turtle.jpg");
+
+                    for (File file : filesToUpload) {
+                        s3Connector.uploadFile(file);
+                        s3Connector.removeFile(file.getName());
+                    }
 
                     correctConnections++;
-
                 } catch (Exception exc) {
                     LOGGER.error("Error in connection: ", exc);
                     failedConnections++;
