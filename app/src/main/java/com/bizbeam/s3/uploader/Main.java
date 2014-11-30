@@ -10,12 +10,11 @@ public class Main {
 
     private static String AWSAccessKeyId= "SAMPLESAMPLESAMPLE";
     private static String AWSSecretKey="2SamPleSample3456SaMpleSample3578SampleSaMpLe";
-    private static String AWSBucketName = "bizbeamtest";
+    private static String AWSBucketName = "sampleBucketName";
     private static String FILE_PREFIX_PATH = "app/src/main/resources";
 
 	public static void main (String args[]) {
 
-        int intervalSeconds = 0;
         long correctConnections = 0;
         long failedConnections = 0;
         JCommanderParams jcp = new JCommanderParams();
@@ -26,20 +25,22 @@ public class Main {
             new JCommander(jcp, args);
             processArguments(jcp);
 
-            intervalSeconds = jcp.getIntervalSeconds();
-            LOGGER.info("interval : " + intervalSeconds + " [sec]");
+            LOGGER.info("interval : " + jcp.getIntervalSeconds() + " [sec]");
+            LOGGER.info("access key : " + jcp.getAccessKey());
+            LOGGER.info("secret key : " + jcp.getSecretKey());
+            LOGGER.info("bucket name : " + jcp.getBucketName());
 
-            S3Connector s3Connector = new S3Connector(AWSBucketName, AWSAccessKeyId, AWSSecretKey);
+            S3Connector s3Connector = new S3Connector(jcp.getBucketName(), jcp.getAccessKey(), jcp.getSecretKey());
             s3Connector.initialize();
 
             while (true) {
 
                 try {
                     //put two files
-                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "AdobeXMLFormsSamples.pdf"));
+                    s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "sampleFiles/AdobeXMLFormsSamples.pdf"));
                     s3Connector.uploadFile(new File(FILE_PREFIX_PATH, "nature-wallpaper-27.jpg"));
 
-                    s3Connector.removeFile("AdobeXMLFormsSamples.pdf");
+                    s3Connector.removeFile("sampleFiles/AdobeXMLFormsSamples.pdf");
                     s3Connector.removeFile("nature-wallpaper-27.jpg");
 
                     //small files
@@ -62,12 +63,13 @@ public class Main {
                 LOGGER.info("Correct connections:" + correctConnections);
                 LOGGER.info("Failed connections:" + failedConnections + "\r\n\r\n");
 
-                LOGGER.info("Sleeping " + intervalSeconds + " seconds...");
-                sleep(intervalSeconds * 1000);
+                LOGGER.info("Sleeping " + jcp.getIntervalSeconds() + " seconds...");
+                sleep(jcp.getIntervalSeconds() * 1000);
             }
 
         } catch (Exception exc) {
             LOGGER.error(exc);
+            System.out.println("\r\n" + exc.toString());
         }
     }
 
@@ -76,6 +78,15 @@ public class Main {
 
         if (jcp.getIntervalSeconds() ==  -1)
             jcp.setIntervalSeconds(5);
+
+        if (jcp.getAccessKey() ==  null)
+            jcp.setAccessKey(AWSAccessKeyId);
+
+        if (jcp.getSecretKey() ==  null)
+            jcp.setSecretKey(AWSSecretKey);
+
+        if (jcp.getBucketName() ==  null)
+            jcp.setBucketName(AWSBucketName);
     }
 
     private static void sleep(int millis) {
