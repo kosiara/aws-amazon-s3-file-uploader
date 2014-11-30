@@ -20,6 +20,7 @@
     <orderEntry type="library" exported="" name="Gradle: commons-httpclient-3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jackson-core-asl-1.4.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: log4j-1.2.17" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: jcommander-1.35" level="project" />
   </component>
 </module>
 
