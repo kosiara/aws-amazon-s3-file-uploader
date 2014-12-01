@@ -3,6 +3,13 @@ aws-amazon-s3-file-uploader
 
 uploads files to aws amazon s3 cloud storage.
 
+What it does?
+==============
+Aws-amazon-s3-file-uploader uploads all files that reside in the application directory and deletes them from S3.
+With this simple tool you can test the stability of your connection to Amazon (a week connection stability test checked
+every 5 minutes). Heavy use can be simulated by copying large files into the program directory.
+
+
 How to run:
 
 java -jar app.jar
